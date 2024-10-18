@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">DicodingEventApp</string>
+    <string name="recommendation_event_for_you">Recommendation event for you!</string>
+    <string name="dicoding_event">Dicoding Event</string>
+    <string name="title_upcoming">Upcoming</string>
+    <string name="title_finished">Finished</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="image">image</string>
+    <string name="event">Event</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="city_name">City Name</string>
+    <string name="category">Category</string>
+    <string name="quota">Quota</string>
+    <string name="registrants">Registrants</string>
+    <string name="description">Description</string>
+    <string name="link">Link</string>
+    <string name="begin_time">Begin Time</string>
+    <string name="end_time">End Time</string>
+    <string name="media_cover">Media Cover</string>
+    <string name="image_logo">Image Logo</string>
+    <string name="summary">Summary</string>
+    <string name="nama_event">nama event</string>
+    <string name="register">register</string>
+    <string name="ownername">OwnerName</string>
+    <string name="begintime">BeginTime</string>
+    <string name="quotaresgistrant">QuotaResgistrant</string>
+    <string name="quota_resgistrant">Quota Resgistrant:</string>
+</resources>
