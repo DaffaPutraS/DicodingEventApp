@@ -1,60 +1,94 @@
 package com.example.dicodingeventapp.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ViewFlipper
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.dicodingeventapp.R
+import com.example.dicodingeventapp.adapter.EventAdapter
+import com.example.dicodingeventapp.data.response.ListEventsItem
+import com.example.dicodingeventapp.databinding.FragmentHomeBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    private val eventViewModel: HomeViewModel by viewModels()
+    private lateinit var eventAdapter: EventAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        observeFinishedEvents()
+        observeActiveEvents()
+        observeLoading()
+
+        // Load active events for carousel
+        eventViewModel.getActiveEvents()
+
+        // Load finished events for RecyclerView
+        eventViewModel.getHomeEvents()
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvFinished.layoutManager = LinearLayoutManager(context)
+        binding.rvFinished.setHasFixedSize(true)
+        eventAdapter = EventAdapter()
+        binding.rvFinished.adapter = eventAdapter
+    }
+
+    // Observe for finished events to display in RecyclerView
+    private fun observeFinishedEvents() {
+        eventViewModel.finishedEvents.observe(viewLifecycleOwner) { events ->
+            eventAdapter.submitList(events)
+        }
+    }
+
+    // Observe for active events to display in ViewFlipper (carousel)
+    private fun observeActiveEvents() {
+        eventViewModel.activeEvents.observe(viewLifecycleOwner) { events ->
+            setupViewFlipper(events, binding.ViewFlipper)
+        }
+    }
+
+    private fun observeLoading() {
+        eventViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+    }
+
+    // Function to set up the ViewFlipper for the carousel
+    private fun setupViewFlipper(events: List<ListEventsItem>, viewFlipper: ViewFlipper) {
+        viewFlipper.removeAllViews()
+        for (event in events) {
+            val view = layoutInflater.inflate(R.layout.item_corousel, null)
+            val imageView = view.findViewById<ImageView>(R.id.iv_carousel)
+            Glide.with(this)
+                .load(event.mediaCover) // Assuming mediaCover is a URL of the event image
+                .into(imageView)
+            viewFlipper.addView(view)
+        }
+        viewFlipper.startFlipping()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
