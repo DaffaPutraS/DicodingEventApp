@@ -11,28 +11,32 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UpcomingViewModel : ViewModel() {
-    private val _events = MutableLiveData<List<ListEventsItem>>()
-    val events: LiveData<List<ListEventsItem>> get() = _events
 
+    private val _upcomingEvents = MutableLiveData<List<ListEventsItem>>()
+    val upcomingEvents: LiveData<List<ListEventsItem>> get() = _upcomingEvents
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
 
-    fun getActiveEvents() {
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
+
+    fun getUpcomingEvents() {
         _loading.value = true
-        val call = ApiClient.apiService.getEvents(active = 1, limit = 10)
-        call.enqueue(object : Callback<EventResponse> {
+        _error.value = null
+        ApiClient.apiService.getEvents(active = 1, limit = 10).enqueue(object : Callback<EventResponse> {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 _loading.value = false
                 if (response.isSuccessful) {
-                    _events.value = response.body()?.listEvents
+                    _upcomingEvents.value = response.body()?.listEvents
                 } else {
-
+                    _error.value = "Failed to load upcoming events: ${response.message()}"
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _loading.value = false
+                _error.value = t.message
             }
         })
     }

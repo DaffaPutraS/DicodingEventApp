@@ -30,4 +30,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="finished">Finished</string>
     <string name="upcoming">Upcoming</string>
+    <string name="no_connection">Connection problem!</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dicodingeventapp.R
 import com.example.dicodingeventapp.adapter.EventAdapter
 import com.example.dicodingeventapp.databinding.FragmentUpcomingBinding
 
@@ -31,8 +32,11 @@ class UpcomingFragment : Fragment() {
 
         setupRecyclerView()
         observeEvents()
+        observeLoading()
+        observeError()
 
-        eventViewModel.getActiveEvents()
+        // Load upcoming events
+        eventViewModel.getUpcomingEvents()
     }
 
     private fun setupRecyclerView() {
@@ -43,12 +47,37 @@ class UpcomingFragment : Fragment() {
     }
 
     private fun observeEvents() {
+        eventViewModel.upcomingEvents.observe(viewLifecycleOwner) { events ->
+            eventAdapter.submitList(events)
+        }
+    }
+
+    private fun observeLoading() {
         eventViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+    }
 
-        eventViewModel.events.observe(viewLifecycleOwner) { events ->
-            eventAdapter.submitList(events)
+    // Error handling, similar to your friend's implementation
+    private fun observeError() {
+        eventViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            if (errorMessage != null) {
+                setupErrorLayout(errorMessage)
+            } else {
+                binding.ErrorLayout.root.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupErrorLayout(error: String?) {
+        binding.ErrorLayout.root.visibility = View.VISIBLE
+        binding.ErrorLayout.tvError.text = getString(R.string.no_connection)
+
+        binding.ErrorLayout.btnConnection.setOnClickListener {
+            binding.ErrorLayout.root.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+
+            eventViewModel.getUpcomingEvents()
         }
     }
 

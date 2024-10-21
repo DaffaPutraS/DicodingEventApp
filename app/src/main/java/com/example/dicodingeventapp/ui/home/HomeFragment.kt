@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
         observeFinishedEvents()
         observeActiveEvents()
         observeLoading()
+        observeError()
 
         // Load active events for carousel
         eventViewModel.getActiveEvents()
@@ -53,14 +54,12 @@ class HomeFragment : Fragment() {
         binding.rvFinished.adapter = eventAdapter
     }
 
-    // Observe for finished events to display in RecyclerView
     private fun observeFinishedEvents() {
         eventViewModel.finishedEvents.observe(viewLifecycleOwner) { events ->
             eventAdapter.submitList(events)
         }
     }
 
-    // Observe for active events to display in ViewFlipper (carousel)
     private fun observeActiveEvents() {
         eventViewModel.activeEvents.observe(viewLifecycleOwner) { events ->
             setupViewFlipper(events, binding.ViewFlipper)
@@ -73,14 +72,40 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // Function to set up the ViewFlipper for the carousel
+    // Error handling, similar to your friend's implementation
+    private fun observeError() {
+        eventViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            if (errorMessage != null) {
+                setupErrorLayout(errorMessage)
+            } else {
+                binding.ErrorLayout.root.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupErrorLayout(error: String?) {
+        // Tampilkan ErrorLayout
+        binding.ErrorLayout.root.visibility = View.VISIBLE
+        binding.ErrorLayout.tvError.text = getString(R.string.no_connection)
+
+        binding.ErrorLayout.btnConnection.setOnClickListener {
+            // Action saat tombol diklik
+            binding.ErrorLayout.root.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+
+            // Panggil ulang event
+            eventViewModel.getActiveEvents()
+            eventViewModel.getHomeEvents()
+        }
+    }
+
     private fun setupViewFlipper(events: List<ListEventsItem>, viewFlipper: ViewFlipper) {
         viewFlipper.removeAllViews()
         for (event in events) {
             val view = layoutInflater.inflate(R.layout.item_corousel, null)
             val imageView = view.findViewById<ImageView>(R.id.iv_carousel)
             Glide.with(this)
-                .load(event.mediaCover) // Assuming mediaCover is a URL of the event image
+                .load(event.mediaCover)
                 .into(imageView)
             viewFlipper.addView(view)
         }
