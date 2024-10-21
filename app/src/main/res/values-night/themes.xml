@@ -10,7 +10,9 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
         <!-- Customize your theme here. -->
+        <!-- Konten status bar (ikon dan teks) menjadi terang agar kontras dengan warna gelap -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

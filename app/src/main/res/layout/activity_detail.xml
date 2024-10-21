@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="@+id/scrollView2"
         app:layout_constraintStart_toStartOf="@+id/scrollView2"
-        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
+        app:layout_constraintTop_toTopOf="@+id/scrollView2"
+        android:indeterminateTint="@color/status_bar_color"/>
 
     <ScrollView
         android:id="@+id/scrollView2"

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_upcoming">
+    app:startDestination="@+id/homeFragment">
 
     <fragment
         android:id="@+id/navigation_upcoming"
@@ -16,5 +16,10 @@
         android:name="com.example.dicodingeventapp.ui.finished.FinishedFragment"
         android:label="@string/title_finished"
         tools:layout="@layout/fragment_finished" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.dicodingeventapp.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
 
 </navigation>

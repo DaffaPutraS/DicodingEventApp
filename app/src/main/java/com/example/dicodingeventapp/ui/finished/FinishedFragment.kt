@@ -38,10 +38,10 @@ class FinishedFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.rvUpcoming.layoutManager = LinearLayoutManager(context)
-        binding.rvUpcoming.setHasFixedSize(true)
+        binding.rvFinished.layoutManager = LinearLayoutManager(context)
+        binding.rvFinished.setHasFixedSize(true)
         eventAdapter = EventAdapter()
-        binding.rvUpcoming.adapter = eventAdapter
+        binding.rvFinished.adapter = eventAdapter
     }
 
     private fun observeEvents() {
