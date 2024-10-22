@@ -19,23 +19,27 @@ class DetailEventViewModel : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
+
     fun fetchEventDetail(id: Int) {
-        _loading.value = true // Menandai mulai loading
+        _loading.value = true
+        _error.value = null // Reset error state
         repository.getEventById(id).enqueue(object : Callback<EventResponse> {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-                _loading.value = false // Menandai loading selesai
+                _loading.value = false
                 if (response.isSuccessful) {
                     response.body()?.let { eventResponse ->
                         _eventDetail.value = eventResponse.event
                     }
                 } else {
-                    // Tangani kesalahan jika perlu
+                    _error.value = "Failed to load event: ${response.message()}"
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                _loading.value = false // Menandai loading selesai pada gagal
-                // Tangani kesalahan jika perlu
+                _loading.value = false
+                _error.value = t.message
             }
         })
     }

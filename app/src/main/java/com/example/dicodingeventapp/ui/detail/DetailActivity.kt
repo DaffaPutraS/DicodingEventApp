@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,13 +24,12 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         repository = EventRepository(ApiClient.apiService)
-
         detailViewModel = ViewModelProvider(this)[DetailEventViewModel::class.java]
+
         val eventId = intent.getIntExtra("EVENT_ID", -1)
         if (eventId != -1) {
             detailViewModel.fetchEventDetail(eventId)
@@ -40,12 +40,33 @@ class DetailActivity : AppCompatActivity() {
             event?.let {
                 bindEventDetail(it)
                 showLoading(false) // Menyembunyikan progress bar setelah data dimuat
+                binding.ErrorLayout.root.visibility = View.GONE
             }
         })
 
         detailViewModel.loading.observe(this, Observer { isLoading ->
             showLoading(isLoading) // Mengamati status loading dari ViewModel
         })
+
+        detailViewModel.error.observe(this, Observer { errorMessage ->
+            if (errorMessage != null) {
+                setupErrorLayout(errorMessage)
+            } else {
+                binding.ErrorLayout.root.visibility = View.GONE
+            }
+        })
+
+        binding.ErrorLayout.btnConnection.setOnClickListener {
+            binding.ErrorLayout.root.visibility = View.GONE
+            showLoading(true)
+            detailViewModel.fetchEventDetail(eventId) // Retry fetching event detail
+        }
+    }
+
+    private fun setupErrorLayout(error: String?) {
+        // Tampilkan ErrorLayout
+        binding.ErrorLayout.root.visibility = View.VISIBLE
+        binding.ErrorLayout.tvError.text = error ?: getString(R.string.no_connection)
     }
 
     @SuppressLint("SetTextI18n")
