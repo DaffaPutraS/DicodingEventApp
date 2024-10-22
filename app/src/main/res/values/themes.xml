@@ -15,4 +15,13 @@
         <!-- Konten status bar (ikon dan teks) menjadi terang agar kontras dengan warna gelap -->
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@color/white</item> <!-- Background di dalam SearchView -->
+        <item name="android:textColor">@color/black</item> <!-- Warna teks input -->
+        <item name="android:textColorHint">@color/gray_500</item> <!-- Warna teks hint -->
+        <item name="android:background">@drawable/custom_search_background</item> <!-- Background kotak luar -->
+    </style>
+
+
 </resources>

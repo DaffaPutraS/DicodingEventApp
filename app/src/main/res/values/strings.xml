@@ -32,4 +32,6 @@
     <string name="upcoming">Upcoming</string>
     <string name="no_connection">Connection problem!</string>
     <string name="refresh">Refresh</string>
+    <string name="event_name">Event Name</string>
+    <string name="cari_event">Search Event</string>
 </resources>
