@@ -34,4 +34,8 @@
     <string name="refresh">Refresh</string>
     <string name="event_name">Event Name</string>
     <string name="cari_event">Search Event</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_setting">Setting</string>
+    <string name="favorite_button">Favorite Button</string>
+    <string name="image_event">Image Event</string>
 </resources>
